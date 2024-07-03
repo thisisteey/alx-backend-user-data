@@ -9,6 +9,7 @@ regexPatrns = {
         'extract': lambda flds, sep: fr"(?P<field>{'|'.join(flds)})=[^{sep}]*",
         'replace': lambda redact: fr"\g<field>={redact}"
 }
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -36,3 +37,14 @@ class RedactingFormatter(logging.Formatter):
         redactMsg = filter_datum(self.fields, self.REDACTION,
                                  fmtMsg, self.SEPARATOR)
         return redactMsg
+
+
+def get_logger() -> logging.Logger:
+    """Creates and configures a logger specifically for a user data"""
+    userDatalogger = logging.getLogger("user_data")
+    streamHandler = logging.StreamHandler()
+    streamHandler.setFormatter(RedactingFormatter(PII_FIELDS))
+    userDatalogger.setLevel(logging.INFO)
+    userDatalogger.propagate = False
+    userDatalogger.addHandler(streamHandler)
+    return userDatalogger
