@@ -69,4 +69,21 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 
 def main():
     """Logs user record information fetched from a database table"""
-    filt
+    fieldNames = "name,email,phone,ssn,password,ip,last_login,user_agent"
+    columns = fieldNames.split(",")
+    dbqry = f"SELECT {fieldNames} FROM users;"
+    infoLogger = get_logger()
+    conn = get_db()
+    with conn.cursor() as cursor:
+        cursor.execute(dbqry)
+        rows = cursor.fetchall()
+        for row in rows:
+            logData = map(lambda x: f"{x[0]}={x[1]}", zip(columns, row))
+            logMsg = f"{'; '.join(list(logData))};"
+            args = ("user_data", logging.INFO, None, None, logMsg, None, None)
+            logrecord = logging.LogRecord(*args)
+            infoLogger.handle(logrecord)
+
+
+if __name__ == "__main__":
+    main()
