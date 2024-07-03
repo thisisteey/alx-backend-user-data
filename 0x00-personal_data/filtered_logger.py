@@ -58,10 +58,15 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     db_pwd = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
     db_host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
     db_name = os.getenv("PERSONAL_DATA_DB_NAME", "")
-    db_conn = mysql.connector.connect(
+    conn = mysql.connector.connection.MySQLConnection(
             user=db_user,
             password=db_pwd,
             host=db_host,
             database=db_name
     )
-    return db_conn
+    return conn
+
+
+def main():
+    """Logs user record information fetched from a database table"""
+    filt
