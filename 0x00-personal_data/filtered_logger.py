@@ -16,3 +16,23 @@ def filter_datum(fields: List[str], redaction: str,
     """Gets and returns an obfuscated log message"""
     extract, replace = (regexPatrns["extract"], regexPatrns["replace"])
     return re.sub(extract(fields, separator), replace(redaction), message)
+
+
+class RedactingFormatter(logging.Formatter):
+    """Redacting Formatter class"""
+
+    REDACTION = "***"
+    FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
+    SEPARATOR = ";"
+
+    def __init__(self, fields: List[str]):
+        """Initialise the RedactingFormatter class"""
+        super(RedactingFormatter, self).__init__(self.FORMAT)
+        self.fields = fields
+
+    def format(self, record: logging.LogRecord) -> str:
+        """Formats a LogRecord and obfuscate specified fields"""
+        fmtMsg = super(RedactingFormatter, self).format(record)
+        redactMsg = filter_datum(self.fields, self.REDACTION,
+                                 fmtMsg, self.SEPARATOR)
+        return redactMsg
