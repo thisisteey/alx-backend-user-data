@@ -16,7 +16,7 @@ class BasicAuth(Auth):
             regexPtrn = r"Basic (?P<token>.+)"
             fldMtch = re.fullmatch(regexPtrn, authorization_header.strip())
             if fldMtch is not None:
-                return fldMtch.groups("token")[0]
+                return fldMtch.group("token")
         return None
 
     def decode_base64_authorization_header(
