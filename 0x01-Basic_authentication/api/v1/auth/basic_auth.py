@@ -4,7 +4,8 @@ from .auth import Auth
 import re
 import base64
 import binascii
-from typing import Tuple
+from typing import Tuple, TypeVar
+from models.user import User
 
 
 class BasicAuth(Auth):
@@ -28,7 +29,7 @@ class BasicAuth(Auth):
                 decodedBytes = base64.b64decode(base64_authorization_header,
                                                 validate=True)
                 return decodedBytes.decode("utf-8")
-            except binascii.Error:
+            except (binascii.Error, UnicodeDecodeError):
                 return None
 
     def extract_user_credentials(
@@ -44,3 +45,17 @@ class BasicAuth(Auth):
                 pwd = fldMtch.group("password")
                 return usr, pwd
         return None, None
+
+    def user_object_from_credentials(
+            self, user_email: str, user_pwd: str) -> TypeVar('User'):
+        """Get & return user based on user's auth information"""
+        if type(user_email) == str and type(user_pwd) == str:
+            try:
+                mtchUsers = User.search({"email": user_email})
+            except Exception:
+                return None
+            if len(mtchUsers) <= 0:
+                return None
+            if mtchUsers[0].is_valid_password(user_pwd):
+                return mtchUsers[0]
+        return None
