@@ -2,6 +2,7 @@
 """Module for managing API session authentication operations"""
 from .auth import Auth
 from uuid import uuid4
+from models.user import User
 
 
 class SessionAuth(Auth):
@@ -19,3 +20,8 @@ class SessionAuth(Auth):
         """Gets & returns the user id associated with a given session id"""
         if type(session_id) is str:
             return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None) -> User:
+        """Gets & returns the authenticated user based on the request"""
+        user_id = self.user_id_for_session_id(self.session_cookie(request))
+        return User.get(user_id)
