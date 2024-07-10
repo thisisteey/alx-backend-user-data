@@ -51,6 +51,7 @@ def check_auth() -> str:
         if auth.require_auth(request.path, excluded_paths):
             authHeader = auth.authorization_header(request)
             currUser = auth.current_user(request)
+            request.current_user = currUser
             if authHeader is None:
                 abort(401)
             if currUser is None:
