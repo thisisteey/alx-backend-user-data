@@ -50,15 +50,16 @@ def check_auth() -> str:
     if auth:
         excluded_paths = ['/api/v1/status/',
                           '/api/v1/unauthorized/',
-                          '/api/v1/forbidden/']
+                          '/api/v1/forbidden/',
+                          '/api/v1/auth_session/login/']
         if auth.require_auth(request.path, excluded_paths):
-            authHeader = auth.authorization_header(request)
             currUser = auth.current_user(request)
-            request.current_user = currUser
-            if authHeader is None:
+            if auth.authorization_header(request) is None and \
+                    auth.session_cookie(request) is None:
                 abort(401)
             if currUser is None:
                 abort(403)
+            request.current_user = currUser
 
 
 if __name__ == "__main__":
