@@ -10,13 +10,13 @@ import os
 @app_views.route("/auth_session/login", methods=["POST"], strict_slashes=False)
 def login() -> Tuple[str, int]:
     """Handle user login via POST request to /api/v1/auth_session/login"""
-    userNFres = { "error": "no user found for this email" }
+    userNFres = {"error": "no user found for this email"}
     email = request.form.get("email")
     if email is None or len(email.strip()) == 0:
-        return jsonify({ "error": "email missing" }), 400
+        return jsonify({"error": "email missing"}), 400
     password = request.form.get("password")
     if password is None or len(password.strip()) == 0:
-        return jsonify({ "error": "password missing" }), 400
+        return jsonify({"error": "password missing"}), 400
     try:
         usersList = User.search({"email": email})
     except Exception:
@@ -29,4 +29,4 @@ def login() -> Tuple[str, int]:
         loginRes = jsonify(usersList[0].to_json())
         loginRes.set_cookie(os.getenv("SESSION_NAME"), sessionToken)
         return loginRes
-    return jsonify({ "error": "wrong password" }), 401
+    return jsonify({"error": "wrong password"}), 401
