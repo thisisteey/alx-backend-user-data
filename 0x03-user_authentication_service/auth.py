@@ -99,5 +99,5 @@ class Auth:
         if userInst is None:
             raise ValueError()
         newPWDhash = _hash_password(password)
-        self._db.update_user(userInst.id, hashed_password=newPWDhas,
+        self._db.update_user(userInst.id, hashed_password=newPWDhash,
                              reset_token=None)
