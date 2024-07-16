@@ -40,8 +40,8 @@ def login() -> str:
 @app.route("/sessions", methods["DELETE"], strict_slashes=False)
 def logout() -> str:
     """Logouts a session and redirects to home route"""
-    sessionCookie = request.cookies.get("session_id")
-    userSession = AUTH.get_user_from_session_id(sessionCookie)
+    session_id = request.cookies.get("session_id")
+    userSession = AUTH.get_user_from_session_id(session_id)
     if userSession is None:
         abort(403)
     AUTH.destroy_session(userSession.id)
