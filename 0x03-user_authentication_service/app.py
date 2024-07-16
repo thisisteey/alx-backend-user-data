@@ -72,7 +72,7 @@ def get_reset_password_token() -> str:
     return jsonify({"email": userEmail, "reset_token": pwdResetTok})
 
 
-@app.route("/reset_password", methods["PUT"], strict_slashes=False)
+@app.route("/reset_password", methods=["PUT"], strict_slashes=False)
 def update_password() -> str:
     """Payload indicating the success or failure of password update"""
     userEmail = request.form.get("email")
