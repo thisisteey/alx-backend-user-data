@@ -88,3 +88,16 @@ class Auth:
         pwdResetTok = _generate_uuid()
         self._db.update_user(userRecord.id, reset_token=pwdResetTok)
         return pwdResetTok
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """Resets the user's password using a provided reset token"""
+        userInst = None
+        try:
+            userInst = self._db.find_user_by(reset_token=reset_token)
+        except NoResultFound:
+            userInst = None
+        if userInst is None:
+            raise ValueError()
+        newPWDhash = _hash_password(password)
+        self._db.update_user(userInst.id, hashed_password=newPWDhas,
+                             reset_token=None)
