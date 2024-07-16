@@ -28,7 +28,7 @@ def create_user() -> str:
 @app.route("/sessions", methods=["POST"], strict_slashes=False)
 def login() -> str:
     """Payload indicating login status"""
-    email, password = request.form.get("email"), request.form.get("passowrd")
+    email, password = request.form.get("email"), request.form.get("password")
     if not AUTH.valid_login(email, password):
         abort(401)
     newSessionID = AUTH.create_session(email)
