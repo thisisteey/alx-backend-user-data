@@ -75,3 +75,16 @@ class Auth:
         if user_id is None:
             return None
         self._db.update_user(user_id, session_id=None)
+
+    def get_reset_password_token(self, email: str) -> str:
+        """Creates a password reset token for the specified email"""
+        userRecord = None
+        try:
+            userRecord = self._db.find_user_by(email=email)
+        except NoResultFound:
+            userRecord = None
+        if userRecord is None:
+            raise ValueError()
+        pwdResetTok = _generate_uuid()
+        self._db.update_user(userRecord.id, reset_token=pwdResetTok)
+        return pwdResetTok
