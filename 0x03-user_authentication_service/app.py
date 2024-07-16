@@ -41,10 +41,10 @@ def login() -> str:
 def logout() -> str:
     """Logouts a session and redirects to home route"""
     session_id = request.cookies.get("session_id")
-    userSession = AUTH.get_user_from_session_id(session_id)
-    if userSession is None:
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is None:
         abort(403)
-    AUTH.destroy_session(userSession.id)
+    AUTH.destroy_session(user.id)
     return redirect("/")
 
 
