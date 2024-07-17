@@ -80,7 +80,7 @@ def update_password(email: str, reset_token: str, new_password: str) -> None:
     """Tests updating user password functionality"""
     endpoint = f"{BASE_URL}/reset_password"
     payload = {"email": email, "reset_token": reset_token,
-                "new_password": new_password}
+               "new_password": new_password}
     resp = requests.put(endpoint, data=payload)
     assert resp.status_code == 200
     assert resp.json() == {"email": email, "message": "Password updated"}
